@@ -1,5 +1,8 @@
 def recursive_bubble_sort(li:list) -> list:
-    '''My recursive implementation of bubble sort.'''
+    '''
+    My recursive implementation of bubble sort.
+    O(n^2)
+    '''
     def compare_swap(li:list, i:int) -> list:
         '''Inner function for swapping values.'''
         if i + 1 >= len(li): # avoid indexing out of range
@@ -20,7 +23,10 @@ def recursive_bubble_sort(li:list) -> list:
     return recursive_bubble_sort(li[:-1]) + [li[-1]]
 
 def iterative_bubble_sort(li:list) -> list:
-    '''My implementation of iterative before seeing book.'''
+    '''
+    My implementation of iterative before seeing book.
+    Two nested for loops --> O(n^2)
+    '''
     for i in range(len(li)):
         for j in range(i + 1, i + len(li[i:])): # everything to the right of i
             if li[i] <= li[j]:
@@ -29,12 +35,20 @@ def iterative_bubble_sort(li:list) -> list:
     return li
 
 def book_bubble_sort(li:list) -> list:
-    '''Algorithm taken straight from the book.'''
+    '''
+    Algorithm taken straight from the book.
+    Two nested for loops --> O(n^2)
+    '''
     list_length = len(li) - 1
-    for _ in range(list_length):
-        for j in range(list_length):
+    for i in range(list_length):
+        no_swaps = True
+        for j in range(list_length - i): # subtract i because don't need to compare with what already "bubbled up"
+            # largest number is at end after first iteration, then 2nd largest is 2nd last after 2nd iteration, etc.
             if li[j] > li[j + 1]:
                 li[j], li[j + 1] = li[j + 1], li[j]
+                no_swaps = False
+        if no_swaps: # adding this makes algorithm significantly faster when the list is nearly sorted
+            return li
     return li
 
 def char_iterative_bubble_sort(li:list) -> list:
@@ -48,6 +62,16 @@ def char_iterative_bubble_sort(li:list) -> list:
 
 
 if __name__ == '__main__':
+    '''
+    Bubble sort
+        - O(n^2)
+            - two nested for loops
+            - worst case, n passes of li and swap adjacent elements so n^2 comparisions
+        - stable
+            - elements with the same value will remain in original order:
+                ex: sorting by first char: [apple, banana, ape] --> [apple, ape, banana] ALWAYS
+    '''
+    
     # Bubble sort
     assert all([func([5, 4, 2, 1, 3]) == list(range(1, 5 + 1)) for func in 
                 [recursive_bubble_sort, iterative_bubble_sort, book_bubble_sort]])
